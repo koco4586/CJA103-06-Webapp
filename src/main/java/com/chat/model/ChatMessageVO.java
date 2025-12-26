@@ -70,4 +70,16 @@ public class ChatMessageVO implements java.io.Serializable {
     public void setReplyToMessageId(Integer replyToMessageId) {
         this.replyToMessageId = replyToMessageId;
     }
+    //以下方便測試
+    @Override
+	public String toString() {
+		return "ChatMessageVO ["
+				+ "messageId=" + messageId 
+				+ ", chatroomId=" + chatroomId 
+				+ ", memberId=" + memberId 
+				+ ", message=" + message 
+				+ ", chatTime=" + chatTime 
+				+ ", replyToMessageId=" + replyToMessageId 
+				+ "]";
+	}
 }
