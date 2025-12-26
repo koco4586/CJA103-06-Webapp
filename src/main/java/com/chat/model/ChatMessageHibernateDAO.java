@@ -43,7 +43,7 @@ public class ChatMessageHibernateDAO implements ChatMessageDAO_interface {
 			throw new RuntimeException("An error occurred:" + e.getMessage(),e);
 		}
 	}
-	//刪除by messageId
+	//刪除單筆訊息 by messageId
 	@Override
 	public void delete(Integer messageId) {
 		Session session = getSession();
