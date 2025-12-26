@@ -1,6 +1,6 @@
 package com.chat.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 @Entity
@@ -21,10 +21,8 @@ public class ChatMessageVO implements java.io.Serializable {
     @Column(name = "MESSAGE")
     private String message;
     
-    // @Temporal 註解指定為 TIMESTAMP 格式
     @Column(name = "CHAT_TIME", insertable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date chatTime;
+    private LocalDateTime chatTime;
     
     @Column(name = "REPLY_TO_MESSAGE_ID")
     private Integer replyToMessageId;
@@ -59,10 +57,10 @@ public class ChatMessageVO implements java.io.Serializable {
         this.message = message;
     }
     
-    public Date getChatTime() {
+    public LocalDateTime getChatTime() {
         return chatTime;
     }
-    public void setChatTime(Date chatTime) {
+    public void setChatTime(LocalDateTime chatTime) {
         this.chatTime = chatTime;
     }
     
