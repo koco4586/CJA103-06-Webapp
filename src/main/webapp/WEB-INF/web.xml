@@ -13,8 +13,16 @@
 		<servlet-name>EmpServlet</servlet-name>
 		<servlet-class>com.emp.controller.EmpServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>ChatServlet</servlet-name>
+		<servlet-class>com.chat.controller.ChatServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>EmpServlet</servlet-name>
 		<url-pattern>/emp/emp.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ChatServlet</servlet-name>
+		<url-pattern>/chat/chat.do</url-pattern>
 	</servlet-mapping>
 </web-app>
