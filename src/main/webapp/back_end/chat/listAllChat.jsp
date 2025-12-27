@@ -63,31 +63,31 @@
 	<tr>
 		<th>訊息ID</th>
 		<th>聊天室ID</th>
-		<th>職位</th>
 		<th>會員ID</th>
+		<th>訊息內容</th>
 		<th>聊天時間</th>
 		<th>回覆到哪則訊息ID</th>
 	</tr>
 	<%@ include file="page1.file" %> 
-	<c:forEach var="ChatMessageVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+	<c:forEach var="chatMessageVO" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
 		
 		<tr>
-			<td>${ChatMessageVO.messageId}</td>
-			<td>${ChatMessageVO.chatroomId}</td>
-			<td>${ChatMessageVO.memberId}</td>
-			<td>${ChatMessageVO.message}</td>
-			<td>${ChatMessageVO.chatTime}</td>
-			<td>${ChatMessageVO.replyToMessageId}</td> 
+			<td>${chatMessageVO.messageId}</td>
+			<td>${chatMessageVO.chatroomId}</td>
+			<td>${chatMessageVO.memberId}</td>
+			<td>${chatMessageVO.message}</td>
+			<td>${chatMessageVO.chatTime}</td>
+			<td>${chatMessageVO.replyToMessageId}</td> 
 			<td>
-			  <FORM METHOD="post" ACTION="<%=request.getContextPath()%>/emp/emp.do" style="margin-bottom: 0px;">
+			  <FORM METHOD="post" ACTION="<%=request.getContextPath()%>/chat/chat.do" style="margin-bottom: 0px;">
 			     <input type="submit" value="修改">
-			     <input type="hidden" name="empno"  value="${ChatMessageVO.messageId}">
+			     <input type="hidden" name="messageId"  value="${chatMessageVO.messageId}">
 			     <input type="hidden" name="action"	value="getOne_For_Update"></FORM>
 			</td>
 			<td>
-			  <FORM METHOD="post" ACTION="<%=request.getContextPath()%>/emp/emp.do" style="margin-bottom: 0px;">
+			  <FORM METHOD="post" ACTION="<%=request.getContextPath()%>/chat/chat.do" style="margin-bottom: 0px;">
 			     <input type="submit" value="刪除">
-			     <input type="hidden" name="empno"  value="${ChatMessageVO.messageId}">
+			     <input type="hidden" name="messageId"  value="${chatMessageVO.messageId}">
 			     <input type="hidden" name="action" value="delete"></FORM>
 			</td>
 		</tr>
