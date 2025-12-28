@@ -87,7 +87,7 @@ h4 {
 	</ul>
 
 
-	<h3>員工管理</h3>
+	<h3>訊息管理</h3>
 
 	<ul>
 		<li><a href='addChatMessage.jsp'>Add</a> a new ChatMessage.</li>

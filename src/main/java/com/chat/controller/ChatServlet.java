@@ -67,13 +67,13 @@ public class ChatServlet extends HttpServlet {
 			}
 
 			/*************************** 3.查詢完成,準備轉交(Send the Success view) *************/
-			req.setAttribute("chatMessageVO", chatMessageVO); // 資料庫取出的empVO物件,存入req
+			req.setAttribute("chatMessageVO", chatMessageVO); // 資料庫取出的chatMessageVO物件,存入req
 			String url = "/back_end/chat/listOneChat.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url); // 成功轉交 listOneChat.jsp
 			successView.forward(req, res);
 		}
 
-		if ("getOne_For_Update".equals(action)) { // 來自listAllEmp.jsp的請求
+		if ("getOne_For_Update".equals(action)) { // 來自listAllChat.jsp的請求
 
 			List<String> errorMsgs = new LinkedList<String>();
 			// Store this set in the request scope, in case we need to
@@ -101,7 +101,7 @@ public class ChatServlet extends HttpServlet {
 
 			try {
 				/*************************** 1.接收請求參數 - 輸入格式的錯誤處理 **********************/
-				// 取得訊息 ID 
+				// 取得訊息 ID
 				String messageIdStr = req.getParameter("messageId");
 				Integer messageId = Integer.valueOf(messageIdStr.trim());
 
@@ -111,21 +111,20 @@ public class ChatServlet extends HttpServlet {
 					errorMsgs.add("訊息內容: 請勿空白");
 				}
 
-
 				// 如果有錯誤，將控制權交還給來源頁面
 				if (!errorMsgs.isEmpty()) {
-		            // 先從資料庫取出原始完整的資料
-		            ChatMessageService chatSvc = new ChatMessageService();
-		            ChatMessageVO chatMessageVO = chatSvc.getOneChatMessage(messageId);
-		            
-		            // 將使用者剛才輸入的有錯訊息內容填進去，保留其他原始欄位
-		            chatMessageVO.setMessage(message); 
+					// 先從資料庫取出原始完整的資料
+					ChatMessageService chatSvc = new ChatMessageService();
+					ChatMessageVO chatMessageVO = chatSvc.getOneChatMessage(messageId);
 
-		            req.setAttribute("chatMessageVO", chatMessageVO); // 此時 VO 包含了完整資訊
-		            RequestDispatcher failureView = req.getRequestDispatcher("/back_end/chat/update_chat_input.jsp");
-		            failureView.forward(req, res);
-		            return; 
-		        }
+					// 將使用者剛才輸入的有錯訊息內容填進去，保留其他原始欄位
+					chatMessageVO.setMessage(message);
+
+					req.setAttribute("chatMessageVO", chatMessageVO); // 此時 VO 包含了完整資訊
+					RequestDispatcher failureView = req.getRequestDispatcher("/back_end/chat/update_chat_input.jsp");
+					failureView.forward(req, res);
+					return;
+				}
 
 				/*************************** 2.開始修改資料 *****************************************/
 				ChatMessageService chatSvc = new ChatMessageService();
@@ -146,77 +145,86 @@ public class ChatServlet extends HttpServlet {
 			}
 		}
 
-		if ("insert".equals(action)) { // 來自addEmp.jsp的請求
-
+		if ("insert".equals(action)) {
 			List<String> errorMsgs = new LinkedList<String>();
-			// Store this set in the request scope, in case we need to
-			// send the ErrorPage view.
 			req.setAttribute("errorMsgs", errorMsgs);
 
-			/*********************** 1.接收請求參數 - 輸入格式的錯誤處理 *************************/
-			String ename = req.getParameter("ename");
-			String enameReg = "^[(\u4e00-\u9fa5)(a-zA-Z0-9_)]{2,10}$";
-			if (ename == null || ename.trim().length() == 0) {
-				errorMsgs.add("員工姓名: 請勿空白");
-			} else if (!ename.trim().matches(enameReg)) { // 以下練習正則(規)表示式(regular-expression)
-				errorMsgs.add("員工姓名: 只能是中、英文字母、數字和_ , 且長度必需在2到10之間");
-			}
-
-			String job = req.getParameter("job").trim();
-			if (job == null || job.trim().length() == 0) {
-				errorMsgs.add("職位請勿空白");
-			}
-
-			java.sql.Date hiredate = null;
 			try {
-				hiredate = java.sql.Date.valueOf(req.getParameter("hiredate").trim());
-			} catch (IllegalArgumentException e) {
-				hiredate = new java.sql.Date(System.currentTimeMillis());
-				errorMsgs.add("請輸入日期!");
-			}
+				/*********************** 1. 接收請求參數 輸入格式驗證 *************************/
+				ChatMessageService chatSvc = new ChatMessageService();
 
-			Double sal = null;
-			try {
-				sal = Double.valueOf(req.getParameter("sal").trim());
-			} catch (NumberFormatException e) {
-				sal = 0.0;
-				errorMsgs.add("薪水請填數字.");
-			}
+				// 驗證聊天室ID格式
+				Integer chatroomId = null;
+				String chatroomIdStr = req.getParameter("chatroomId");
+				if (chatroomIdStr == null || chatroomIdStr.trim().isEmpty()) {
+					errorMsgs.add("聊天室編號：請勿空白");
+				} else {
+					try {
+						chatroomId = Integer.valueOf(chatroomIdStr.trim());
+					} catch (NumberFormatException e) {
+						errorMsgs.add("聊天室編號：請填數字");
+					}
+				}
 
-			Double comm = null;
-			try {
-				comm = Double.valueOf(req.getParameter("comm").trim());
-			} catch (NumberFormatException e) {
-				comm = 0.0;
-				errorMsgs.add("獎金請填數字.");
-			}
+				// 驗證會員ID格式
+				Integer memberId = null;
+				String memberIdStr = req.getParameter("memberId");
+				if (memberIdStr == null || memberIdStr.trim().isEmpty()) {
+					errorMsgs.add("會員ID：請勿空白");
+				} else {
+					try {
+						memberId = Integer.valueOf(memberIdStr.trim());
+					} catch (NumberFormatException e) {
+						errorMsgs.add("會員ID：請填數字");
+					}
+				}
 
-			Integer deptno = Integer.valueOf(req.getParameter("deptno").trim());
+				// 驗證訊息內容格式
+				String message = req.getParameter("message");
+				if (message == null || message.trim().isEmpty()) {
+					errorMsgs.add("訊息內容：請勿空白");
+				}
 
-			EmpVO empVO = new EmpVO();
-			empVO.setEname(ename);
-			empVO.setJob(job);
-			empVO.setHiredate(hiredate);
-			empVO.setSal(sal);
-			empVO.setComm(comm);
-			empVO.setDeptno(deptno);
+				// 驗證回覆訊息ID格式和存在性  
+				Integer replyToMessageId = null;
+				String replyStr = req.getParameter("replyToMessageId");
+				if (replyStr != null && !replyStr.trim().isEmpty()) {
+					try {
+						replyToMessageId = Integer.valueOf(replyStr.trim());
+						if (chatSvc.getOneChatMessage(replyToMessageId) == null) {
+							errorMsgs.add("回覆的訊息ID不存在");
+						}
+					} catch (NumberFormatException e) {
+						errorMsgs.add("回覆訊息ID：格式錯誤，請填數字");
+					}
+				}
 
-			// Send the use back to the form, if there were errors
-			if (!errorMsgs.isEmpty()) {
-				req.setAttribute("empVO", empVO); // 含有輸入格式錯誤的empVO物件,也存入req
-				RequestDispatcher failureView = req.getRequestDispatcher("/emp/addEmp.jsp");
-				failureView.forward(req, res);
+				// 封裝資料，確保 forward 回去時 addChatMessage.jsp 的 EL 抓得到值
+				ChatMessageVO chatMessageVO = new ChatMessageVO();
+				chatMessageVO.setChatroomId(chatroomId);
+				chatMessageVO.setMemberId(memberId);
+				chatMessageVO.setMessage(message);
+				chatMessageVO.setReplyToMessageId(replyToMessageId);
+
+				if (!errorMsgs.isEmpty()) {
+					req.setAttribute("chatMessageVO", chatMessageVO);
+					RequestDispatcher failureView = req.getRequestDispatcher("/back_end/chat/addChatMessage.jsp");
+					failureView.forward(req, res);
+					return;
+				}
+
+				/*************************** 2. 開始新增資料 ***************************************/
+				chatSvc.addChatMessage(chatroomId, memberId, message, replyToMessageId); //
+
+				/*************************** 3. 新增完成, 準備轉交 ***********************************/
+				res.sendRedirect(req.getContextPath() + "/back_end/chat/listAllChat.jsp");
 				return;
+
+			} catch (Exception e) {
+				errorMsgs.add("新增資料失敗：" + e.getMessage());
+				RequestDispatcher failureView = req.getRequestDispatcher("/back_end/chat/addChatMessage.jsp");
+				failureView.forward(req, res);
 			}
-
-			/*************************** 2.開始新增資料 ***************************************/
-			EmpService empSvc = new EmpService();
-			empVO = empSvc.addEmp(ename, job, hiredate, sal, comm, deptno);
-
-			/*************************** 3.新增完成,準備轉交(Send the Success view) ***********/
-			String url = "/emp/listAllEmp.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url); // 新增成功後轉交listAllEmp.jsp
-			successView.forward(req, res);
 		}
 
 		if ("delete".equals(action)) { // 來自listAllEmp.jsp

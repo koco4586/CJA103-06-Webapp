@@ -13,11 +13,15 @@ public class ChatMessageService {
 	}
 
 	// 新增
-	public ChatMessageVO addChatMessage(Integer chatroomId, Integer memberId, String message) {
+	public ChatMessageVO addChatMessage(Integer chatroomId, Integer memberId, String message,
+			Integer replyToMessageId) {
 		ChatMessageVO chatMessageVO = new ChatMessageVO();
 		chatMessageVO.setChatroomId(chatroomId);
 		chatMessageVO.setMemberId(memberId);
 		chatMessageVO.setMessage(message);
+		chatMessageVO.setReplyToMessageId(replyToMessageId);
+		// 新增時也自動填入時間 (避免前端顯示 null) 這一行時間不會新增到資料庫
+	    chatMessageVO.setChatTime(java.time.LocalDateTime.now());
 		dao.insert(chatMessageVO);
 		return chatMessageVO;
 	}
