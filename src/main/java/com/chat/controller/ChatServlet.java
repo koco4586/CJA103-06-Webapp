@@ -235,14 +235,14 @@ public class ChatServlet extends HttpServlet {
 			req.setAttribute("errorMsgs", errorMsgs);
 
 			/*************************** 1.接收請求參數 ***************************************/
-			Integer empno = Integer.valueOf(req.getParameter("empno"));
+			Integer messageId = Integer.valueOf(req.getParameter("messageId"));
 
 			/*************************** 2.開始刪除資料 ***************************************/
-			EmpService empSvc = new EmpService();
-			empSvc.deleteEmp(empno);
+			ChatMessageService chatSvc = new ChatMessageService();
+			chatSvc.deleteChatMessage(messageId);
 
 			/*************************** 3.刪除完成,準備轉交(Send the Success view) ***********/
-			String url = "/emp/listAllEmp.jsp";
+			String url = "/back_end/chat/listAllChat.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);// 刪除成功後,轉交回送出刪除的來源網頁
 			successView.forward(req, res);
 		}
