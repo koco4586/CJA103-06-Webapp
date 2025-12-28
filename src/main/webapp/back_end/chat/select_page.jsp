@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>IBM Emp: Home</title>
+<title>Chat Messages: Home</title>
 
 <style>
 table#table-1 {
@@ -33,12 +33,12 @@ h4 {
 
 	<table id="table-1">
 		<tr>
-			<td><h3>IBM Emp: Home</h3>
+			<td><h3>Chat Messages: Home</h3>
 				<h4>( MVC )</h4></td>
 		</tr>
 	</table>
 
-	<p>This is the Home page for IBM Emp: Home</p>
+	<p>This is the Home page for chat messages: Home</p>
 
 	<h3>資料查詢:</h3>
 

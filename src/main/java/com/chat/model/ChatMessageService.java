@@ -9,7 +9,7 @@ public class ChatMessageService {
 	private ChatMessageDAO_interface dao;
 
 	public ChatMessageService() {
-		dao = new ChatMessageHibernateDAO();
+		dao = new ChatMessageHibernateDAOImpl();
 	}
 
 	// 新增

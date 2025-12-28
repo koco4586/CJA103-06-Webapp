@@ -7,7 +7,7 @@ import org.hibernate.SessionFactory;
 
 import com.util.HibernateUtil;
 
-public class ChatMessageHibernateDAO implements ChatMessageDAO_interface {
+public class ChatMessageHibernateDAOImpl implements ChatMessageDAO_interface {
 
 	// 透過 HibernateUtil 取得 SessionFactory
 	private SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
